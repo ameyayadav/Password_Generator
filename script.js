@@ -96,14 +96,19 @@ let hasSpecial = false;
 let promptInput = "";
 let passwordCharacterStr = "";
 
+let passwordStr = "";
+// defined a function to check whether the string has space or not 
+function hasSpace(str){
+  return str.indexOf(" ") >= 0;
+}
 // Function to prompt user for password options
 function getPasswordOptions() {
   
-  let passwordLength;
-  let hasLowerCase = false;
-  let hasUpperCase = false;
-  let hasNumeric = false;
-  let hasSpecial = false;
+  // let passwordLength;
+  // let hasLowerCase = false;
+  // let hasUpperCase = false;
+  // let hasNumeric = false;
+  // let hasSpecial = false;
   
   // Prompt the user to enter a password length
   while (true) {
@@ -115,7 +120,7 @@ function getPasswordOptions() {
       break;
     } else if (input.trim() === "") {
       // User entered an empty string, ask again
-      alert("Please enter a non-empty string.");
+      alert("Please enter a password.");
       continue;
     } else if (isNaN(input)) {
       // User entered a non-numeric string, ask again
@@ -184,48 +189,118 @@ function getPasswordOptions() {
   }
   
   const characterTypeNum = characterTypes.length;
+  return characterTypeNum
 }
 
 // Function for getting a random element from an array
-function getRandom(arr) {
-  const randomIndex = Math.floor(Math.random() * arr.length);
-  return arr[randomIndex];
+function randomNo(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function getSelectedCharacter() {
-  const selectedCharacters = [];
+// function getSelectedCharacter() {
+//   const selectedCharacters = [];
 
-  if (hasLowerCase) {
-    selectedCharacters.push(...lowerCasedCharacters);
+//   if (hasLowerCase) {
+//     selectedCharacters.push(...lowerCasedCharacters);
+//   }
+
+//   if (hasUpperCase) {
+//     selectedCharacters.push(...upperCasedCharacters);
+//   }
+
+//   if (hasNumeric) {
+//     selectedCharacters.push(...numericCharacters);
+//   }
+
+//   if (hasSpecial) {
+//     selectedCharacters.push(...specialCharacters);
+//   }
+
+//   const randomCharacter = getRandomFromArray(selectedCharacters);
+//   return randomCharacter;
+// }
+
+function getSelectedCharacter(){
+  if(hasLowerCase)
+  {
+    passwordCharacterStr =passwordCharacterStr.concat(lowerCasedCharacters);
   }
-
-  if (hasUpperCase) {
-    selectedCharacters.push(...upperCasedCharacters);
+  if(hasUpperCase)
+  {
+    passwordCharacterStr = passwordCharacterStr.concat(upperCasedCharacters);
   }
-
-  if (hasNumeric) {
-    selectedCharacters.push(...numericCharacters);
+  if(hasNumeric)
+  {
+    passwordCharacterStr = passwordCharacterStr.concat(numericCharacters);
   }
-
-  if (hasSpecial) {
-    selectedCharacters.push(...specialCharacters);
+  if(hasSpecial)
+  {
+    passwordCharacterStr = passwordCharacterStr.concat(specialCharacters);
   }
-
-  const randomCharacter = getRandomFromArray(selectedCharacters);
-  return randomCharacter;
+  
 }
 
+function shuffleStr(str){
+  let strArr = str.split("");
+  console.log("The orginal password string is "+ strArr);
+  for(let i=strArr.length-1; i>0; i--){
+    let j = Math.floor(Math.random()*(i+1));
+    let k = strArr[i];
+    strArr[i] = strArr[j];
+    strArr[j] = k;
+  }
+  console.log("The shuffled password string is " + strArr);
+  return strArr.join("");
+}
+
+function resetValues() {
+
+    passwordLength = 0,
+    hasLowerCase= false,
+    hasUpperCase = false,
+    hasNumeric = false,
+    hasSpecial = false,
+    characterTypeNum = 0,
+    passwordCharacterStr = [],
+    passwordStr = ""
+  };
+
+ 
 
 // Function to generate password with user input
 function generatePassword() {
-
-}
+  getPasswordOptions();
+  getSelectedCharacter();
+  
+  if(hasLowerCase){
+    passwordStr += randomNo(lowerCasedCharacters);
+  }
+  if(hasUpperCase){
+    passwordStr += randomNo(upperCasedCharacters);
+  }
+  if(hasNumeric){
+    passwordStr += randomNo(numericCharacters);
+  }
+  if(hasSpecial){
+    passwordStr += randomNo(specialCharacters);
+  }
+  
+  for(let i=0; i<passwordLength-characterTypeNum; i++){
+    passwordStr += randomNo(passwordCharacterStr);
+  }
+  
+  passwordStr = shuffleStr(passwordStr);
+  
+  return passwordStr;
+  }
+  
 
 // Get references to the #generate element
 var generateBtn = document.querySelector('#generate');
 
 // Write password to the #password input
 function writePassword() {
+  resetValues ();
   var password = generatePassword();
   var passwordText = document.querySelector('#password');
 
